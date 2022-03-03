@@ -18,7 +18,7 @@ import "../interfaces/solidly/IBaseV1Router01.sol";
 import {route} from "../interfaces/solidly/IBaseV1Router01.sol";
 import {BaseStrategy} from "../deps/BaseStrategy.sol";
 
-contract StrategySolidexWeveUsdc is BaseStrategy {
+contract StrategySolidexOxdUsdc is BaseStrategy {
     using SafeERC20Upgradeable for IERC20Upgradeable;
     using AddressUpgradeable for address;
     using SafeMathUpgradeable for uint256;
@@ -35,8 +35,8 @@ contract StrategySolidexWeveUsdc is BaseStrategy {
 
     // ===== Token Registry =====
 
-    IERC20Upgradeable public constant weve =
-        IERC20Upgradeable(0x911da02C1232A3c3E1418B834A311921143B04d7);
+    IERC20Upgradeable public constant oxd =
+        IERC20Upgradeable(0xc165d941481e68696f43EE6E99BFB2B23E0E3114);
     IERC20Upgradeable public constant usdc =
         IERC20Upgradeable(0x04068DA6C83AFCFA0e13ba15A6696662335D5B75);
     IERC20Upgradeable public constant solid =
@@ -105,7 +105,7 @@ contract StrategySolidexWeveUsdc is BaseStrategy {
         solid.safeApprove(uniswapV02Router, type(uint256).max);
         wftm.safeApprove(uniswapV02Router, type(uint256).max);
         sex.safeApprove(baseV1Router01, type(uint256).max);
-        weve.safeApprove(baseV1Router01, type(uint256).max);
+        oxd.safeApprove(baseV1Router01, type(uint256).max);
         usdc.safeApprove(baseV1Router01, type(uint256).max);
     }
 
@@ -113,7 +113,7 @@ contract StrategySolidexWeveUsdc is BaseStrategy {
 
     // @dev Specify the name of the strategy
     function getName() external pure override returns (string memory) {
-        return "StrategySolidexWeveUsdc";
+        return "StrategySolidexOxdUsdc";
     }
 
     // @dev Specify the version of the Strategy, for upgrades
@@ -145,7 +145,7 @@ contract StrategySolidexWeveUsdc is BaseStrategy {
         protectedTokens[0] = want; // OXD/USDC LP
         protectedTokens[1] = address(sex); // SEX
         protectedTokens[2] = address(solid); // SOLID
-        protectedTokens[3] = address(weve); // WeVe
+        protectedTokens[3] = address(oxd); // OXD
         protectedTokens[4] = address(usdc); // USDC
         return protectedTokens;
     }
@@ -238,24 +238,24 @@ contract StrategySolidexWeveUsdc is BaseStrategy {
                 path
             );
 
-            // 5. Swap half USDC for WeVe on Solidly
+            // 5. Swap half USDC for OXD on Solidly
             uint256 _half = usdc.balanceOf(address(this)).mul(5000).div(MAX_BPS);
             _swapExactTokensForTokens_solidly(
                 baseV1Router01,
                 _half,
-                route(address(usdc), address(weve), false) // False to use the volatile route
+                route(address(usdc), address(oxd), false) // False to use the volatile route
             );
 
-            // 6. Provide liquidity for WeVe/USDC LP Pair
-            uint256 _weveIn = weve.balanceOf(address(this));
+            // 6. Provide liquidity for OXD/USDC LP Pair
+            uint256 _oxdIn = oxd.balanceOf(address(this));
             uint256 _usdcIn = usdc.balanceOf(address(this));
             IBaseV1Router01(baseV1Router01).addLiquidity(
-                address(weve),
+                address(oxd),
                 address(usdc),
                 false, // Volatile
-                _weveIn,
+                _oxdIn,
                 _usdcIn,
-                _weveIn.mul(sl).div(MAX_BPS),
+                _oxdIn.mul(sl).div(MAX_BPS),
                 _usdcIn.mul(sl).div(MAX_BPS),
                 address(this),
                 now
