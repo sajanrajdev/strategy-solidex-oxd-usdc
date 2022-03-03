@@ -3,12 +3,11 @@ from brownie import (
     interface,
     Controller,
     SettV4,
-    StrategySolidexWeveUsdc,
+    StrategySolidexOxdUsdc,
 )
 from config import (
     BADGER_DEV_MULTISIG,
     FEES,
-    WEVE_USDC_LP,
 )
 from dotmap import DotMap
 import pytest
@@ -60,7 +59,7 @@ def deploy(sett_config):
     controller.setVault(sett.token(), sett)
 
     # Deploy strat
-    strategy = StrategySolidexWeveUsdc.deploy({"from": deployer})
+    strategy = StrategySolidexOxdUsdc.deploy({"from": deployer})
 
     args = [
         BADGER_DEV_MULTISIG,

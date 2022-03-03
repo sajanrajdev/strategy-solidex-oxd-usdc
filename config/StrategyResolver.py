@@ -116,7 +116,7 @@ class StrategyResolver(StrategyCoreResolver):
         entities["strategy"] = self.manager.strategy.address
         entities["lpDepositor"] = self.manager.strategy.lpDepositor()
         entities["baseV1Router01"] = self.manager.strategy.baseV1Router01()
-        entities["gauge"] = "0xA0ce41C44C2108947e7a5291fE3181042AFfdae7"
+        entities["gauge"] = "0x8E81Ec0d9C184e73746446DfB83F86C1156744d5"
 
 
         super().add_entity_balances_for_tokens(calls, tokenKey, token, entities)
@@ -130,10 +130,10 @@ class StrategyResolver(StrategyCoreResolver):
         sex = interface.IERC20(strategy.sex())
         wftm = interface.IERC20(strategy.sex())
         usdc = interface.IERC20(strategy.usdc())
-        weve = interface.IERC20(strategy.weve())
+        oxd = interface.IERC20(strategy.oxd())
 
         calls = self.add_entity_balances_for_tokens(calls, "solid", solid, entities)
         calls = self.add_entity_balances_for_tokens(calls, "sex", sex, entities)
         calls = self.add_entity_balances_for_tokens(calls, "wftm", wftm, entities)
         calls = self.add_entity_balances_for_tokens(calls, "usdc", usdc, entities)
-        calls = self.add_entity_balances_for_tokens(calls, "weve", weve, entities)
+        calls = self.add_entity_balances_for_tokens(calls, "oxd", oxd, entities)
